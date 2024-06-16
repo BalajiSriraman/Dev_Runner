@@ -1,4 +1,4 @@
-# Package Script Runner
+# Package Script Runner [WIP]
 
 A command-line interface (CLI) tool built in Rust that detects `package.json` files and provides an interactive prompt to run npm scripts.
 
