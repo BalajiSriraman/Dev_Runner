@@ -1,10 +1,11 @@
-# Package Script Runner
+# Package Script Runner [WIP]
 
 A command-line interface (CLI) tool built in Rust that detects `package.json` files and provides an interactive prompt to run npm scripts.
 
 ## Installation
+
 ```bash
-curl -s https://raw.githubusercontent.com/Dev-Runner/package-script-runner/main/install.sh | bash
+curl -s https://storage.googleapis.com/dev_runner/install.sh | bash
 ```
 
 ## Features
