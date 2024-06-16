@@ -1,11 +1,18 @@
 [package]
-name = "grrs"
-version = "0.1.0"
+name = "dev_runner"
+version = "0.1.1"
 edition = "2021"
+authors = ["Balaji Sriraman <balajisrdev@gmail.com>"]
+description = "A CLI tool to run development commands in a project via a interactive menu"
+license = "MIT"  
+repository = "https://github.com/BalajiSriraman/Dev_Runner"  # Replace with your repository URL
+documentation = "https://docs.rs/dev_runner"
+readme = "README.md" 
+keywords = ["development", "cli", "runner"]  
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 clap = { version = "4.0", features = ["derive"] }
 serde_json = "1.0.117"
-anyhow = { version = "1.0", default-features = false }
 cliclack = "0.3.1"
 console = "0.14"

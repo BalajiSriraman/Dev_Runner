@@ -1,18 +1,13 @@
-use std::process::{Command, Stdio};
+use std::process::Command;
 
-pub fn cli_execute(cmd: &str) -> Result<(), String> {
-    let child = Command::new(cmd)
-        .stdin(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
+pub fn cli_execute(cmd: &str) {
+    println!("⚙ Executing {} 🚀", cmd);
+
+    let mut child = Command::new("sh") // or "cmd" on Windows
+        .arg("-c")
+        .arg(cmd)
         .spawn()
-        .map_err(|e| e.to_string())?;
+        .expect("Failed to start command");
 
-    let status = child.wait_with_output().map_err(|e| e.to_string())?;
-
-    if !status.status.success() {
-        Err(String::from_utf8_lossy(&status.stderr).into_owned())
-    } else {
-        Ok(())
-    }
+    child.wait().expect("Failed to wait on command");
 }

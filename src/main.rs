@@ -1,15 +1,16 @@
 use clap::Parser;
-use grrs::utils::execute::cli_execute;
 use serde_json::Value;
 
 // Imports
-use grrs::utils::cli_helpers::prompt_selecter;
-use grrs::utils::package_json::package_json_handler;
-use grrs::utils::runner::{file_picker, file_reader};
+use dev_runner::utils::cli_helpers::prompt_selecter;
+use dev_runner::utils::execute::cli_execute;
+use dev_runner::utils::package_json::package_json_handler;
+use dev_runner::utils::runner::{file_picker, file_reader};
 
-/// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]
 struct Cli {
+    /// The path to the package.json file [default: root(.)]
+    #[clap(default_value = ".")]
     path: std::path::PathBuf,
 }
 fn main() {
@@ -43,9 +44,7 @@ fn main() {
         }
     };
 
-    println!("⚙ Executing {} 🚀", selected);
+    let npm_command = "npm run".to_string() + " " + &selected;
 
-    if let Err(e) = cli_execute(&selected) {
-        eprintln!("Error: {}", e);
-    }
+    cli_execute(&npm_command)
 }
