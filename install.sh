@@ -7,29 +7,44 @@ BINARY_URL="https://storage.googleapis.com/dev_runner/dev_runner-0.1.0-x86_64-li
 INSTALL_DIR="$HOME/.local/bin"
 ALIAS_NAME="devr"
 
+# Enable verbose mode for debugging
+set -x
+
 # Create install directory if it doesn't exist
 mkdir -p "$INSTALL_DIR"
 
 # Download and extract the binary
-curl -L "$BINARY_URL" | tar -xz -C "$INSTALL_DIR"
-
-# Ensure the install directory is in the PATH
-if ! echo "$PATH" | grep -q "$INSTALL_DIR"; then
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
+if ! curl -L "$BINARY_URL" | tar -xz -C "$INSTALL_DIR"; then
+    echo "Failed to download or extract the binary"
+    exit 1
 fi
 
-# Add alias to .bashrc and .zshrc
-echo "alias $ALIAS_NAME='$APP_NAME'" >> "$HOME/.bashrc"
-echo "alias $ALIAS_NAME='$APP_NAME'" >> "$HOME/.zshrc"
+# Ensure the binary is executable
+chmod +x "$INSTALL_DIR/$APP_NAME"
 
-# Reload shell configuration
-source "$HOME/.bashrc" || source "$HOME/.zshrc"
+# Add alias to .bashrc (we'll skip .zshrc as it's not typically used in Codespaces)
+echo "alias $ALIAS_NAME='$APP_NAME'" >> "$HOME/.bashrc"
+
+# Create a temporary script to source .bashrc and run the app
+TMP_SCRIPT=$(mktemp)
+echo "#!/bin/bash" > "$TMP_SCRIPT"
+echo "source $HOME/.bashrc" >> "$TMP_SCRIPT"
+echo "$APP_NAME" >> "$TMP_SCRIPT"
+chmod +x "$TMP_SCRIPT"
 
 # Verify installation
-if command -v $APP_NAME &> /dev/null; then
-  echo "$APP_NAME installed successfully!"
-  echo "You can now use '$APP_NAME' or '$ALIAS_NAME' to run the application."
+if "$TMP_SCRIPT"; then
+    echo "$APP_NAME installed successfully!"
+    echo "You can now use '$APP_NAME' or '$ALIAS_NAME' to run the application."
 else
-  echo "Failed to install $APP_NAME."
+    echo "Failed to install $APP_NAME."
 fi
+
+# Clean up
+rm "$TMP_SCRIPT"
+
+# Disable verbose mode
+set +x
+
+# Print final PATH for verification
+echo "Updated PATH: $PATH"
