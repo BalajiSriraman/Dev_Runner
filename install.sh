@@ -3,7 +3,7 @@
 # Set variables
 APP_NAME="dev_runner"
 VERSION="0.1.0"
-BINARY_URL="https://storage.googleapis.com/dev_runner/dev_runner-0.1.0-x86_64-linux-gnu.tar.gz"
+BINARY_URL="https://github.com/BalajiSriraman/Dev_Runner/raw/main/dev_runner-0.1.0-x86_64-linux-gnu.tar.gz"
 INSTALL_DIR="$HOME/.local/bin"
 ALIAS_NAME="devr"
 

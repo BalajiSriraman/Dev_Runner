@@ -4,7 +4,9 @@ use serde_json::Value;
 // Imports
 use dev_runner::utils::cli_helpers::prompt_selecter;
 use dev_runner::utils::execute::cli_execute;
-use dev_runner::utils::package_json::package_json_handler;
+use dev_runner::utils::package_json::{
+    get_package_manager, package_json_handler, package_json_scripts_handler,
+};
 use dev_runner::utils::runner::{file_picker, file_reader};
 
 #[derive(Parser)]
@@ -23,7 +25,7 @@ fn main() {
     let file_data = file_reader(&v_path);
 
     // Parses the data and returns the scripts object
-    let scripts = match package_json_handler(&file_data) {
+    let scripts = match package_json_scripts_handler(&file_data) {
         Ok(result) => result,
         Err(e) => {
             eprintln!("Error: {}", e);
@@ -36,7 +38,7 @@ fn main() {
         return;
     }
 
-    let selected = match prompt_selecter(scripts) {
+    let selected = match prompt_selecter(scripts.clone()) {
         Ok(value) => value,
         Err(e) => {
             eprintln!("🔺 Error: {}", e);
@@ -44,7 +46,11 @@ fn main() {
         }
     };
 
-    let npm_command = "npm run".to_string() + " " + &selected;
+    let file_contents = package_json_handler(&file_data);
+
+    let command = get_package_manager(&file_contents);
+
+    let npm_command = command + " " + &selected;
 
     cli_execute(&npm_command)
 }
